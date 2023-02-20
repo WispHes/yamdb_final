@@ -71,10 +71,10 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }} # Если ваш ssh-ключ защищён фразой-паролем
         script: |
           # Выполняет pull образа с DockerHub
-          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/api_yamdb
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/yamdb_final
           #остановка всех контейнеров
           sudo docker stop $(sudo docker ps -a -q)
-          sudo docker run --rm -d -p 5000:5000 ${{ secrets.DOCKER_USERNAME }}/api_yamdb
+          sudo docker run --rm -d -p 51:51 ${{ secrets.DOCKER_USERNAME }}/yamdb_final
 
   # send_message:
   #   runs-on: ubuntu-latest
