@@ -14,17 +14,10 @@ from reviews.models import Category, Genre, Review, Title, User
 from .filters import TitlesFilter
 from .mixins import ListCreateDestroyViewSet
 from .permissions import AdminOnly, AllPermission, IsAdminUserOrReadOnly
-from .serializers import (
-    CategorySerializer,
-    CommentSerializer,
-    GenreSerializer,
-    GetTokenSerializer,
-    ReadOnlyTitleSerializer,
-    ReviewSerializer,
-    SignUpSerializer,
-    TitleSerializer,
-    UsersSerializer,
-)
+from .serializers import (CategorySerializer, CommentSerializer,
+                          GenreSerializer, GetTokenSerializer,
+                          ReadOnlyTitleSerializer, ReviewSerializer,
+                          SignUpSerializer, TitleSerializer, UsersSerializer)
 
 
 @api_view(["POST"])
@@ -34,19 +27,18 @@ from .serializers import (
     ]
 )
 def sign_up(request):
-    if request.method == "POST":
-        serializer = SignUpSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user, _ = User.objects.get_or_create(**serializer.validated_data)
-        confirmation_code = default_token_generator.make_token(user)
-        send_mail(
-            subject="Код доступа",
-            message=f"Код доступа {confirmation_code}",
-            from_email="from@example.com",
-            recipient_list=[user.email],
-            fail_silently=False,
-        )
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    serializer = SignUpSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    user, _ = User.objects.get_or_create(**serializer.validated_data)
+    confirmation_code = default_token_generator.make_token(user)
+    send_mail(
+        subject="Код доступа",
+        message=f"Код доступа {confirmation_code}",
+        from_email="from@example.com",
+        recipient_list=[user.email],
+        fail_silently=False,
+    )
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
@@ -111,7 +103,9 @@ class CategoryViewSet(ListCreateDestroyViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all().annotate(Avg("reviews__score")).order_by("name")
+    queryset = (
+        Title.objects.all().annotate(Avg("reviews__score")).order_by("name")
+    )
     serializer_class = TitleSerializer
     permission_classes = (IsAdminUserOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)

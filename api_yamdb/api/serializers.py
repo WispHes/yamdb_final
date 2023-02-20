@@ -9,7 +9,9 @@ from user.models import User
 class UsersSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("username", "email", "first_name", "last_name", "bio", "role")
+        fields = (
+            "username", "email", "first_name", "last_name", "bio", "role"
+        )
 
 
 class GetTokenSerializer(serializers.ModelSerializer):
@@ -25,7 +27,9 @@ class GetTokenSerializer(serializers.ModelSerializer):
     def validate(self, data):
         user = get_object_or_404(User, username=data["username"])
         data["user"] = user
-        if not default_token_generator.check_token(user, data["confirmation_code"]):
+        if not default_token_generator.check_token(
+            user, data["confirmation_code"]
+        ):
             raise serializers.ValidationError(
                 {"confirmation_code": "Неверный код подтверждения"}
             )
@@ -68,18 +72,24 @@ class TitleSerializer(serializers.ModelSerializer):
 
 
 class ReadOnlyTitleSerializer(serializers.ModelSerializer):
-    rating = serializers.IntegerField(source="reviews__score__avg", read_only=True)
+    rating = serializers.IntegerField(
+        source="reviews__score__avg", read_only=True
+    )
     genre = GenreSerializer(many=True)
     category = CategorySerializer()
 
     class Meta:
         model = Title
-        fields = ("id", "name", "year", "rating", "description", "genre", "category")
+        fields = (
+            "id", "name", "year", "rating", "description", "genre", "category"
+        )
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     title = serializers.SlugRelatedField(slug_field="name", read_only=True)
-    author = serializers.SlugRelatedField(slug_field="username", read_only=True)
+    author = serializers.SlugRelatedField(
+        slug_field="username", read_only=True
+    )
 
     def validate(self, data):
         request = self.context["request"]
@@ -100,7 +110,9 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     review = serializers.SlugRelatedField(slug_field="text", read_only=True)
-    author = serializers.SlugRelatedField(slug_field="username", read_only=True)
+    author = serializers.SlugRelatedField(
+        slug_field="username", read_only=True
+    )
 
     class Meta:
         fields = "__all__"

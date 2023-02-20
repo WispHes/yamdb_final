@@ -26,7 +26,8 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "-u", "--users", action="store_true", default=False, help="Load users.csv"
+            "-u", "--users", action="store_true", default=False,
+            help="Load users.csv"
         )
         parser.add_argument(
             "-c",
@@ -36,13 +37,16 @@ class Command(BaseCommand):
             help="Load category.csv",
         )
         parser.add_argument(
-            "-g", "--genre", action="store_true", default=False, help="Load genre.csv"
+            "-g", "--genre", action="store_true", default=False,
+            help="Load genre.csv"
         )
         parser.add_argument(
-            "-t", "--titles", action="store_true", default=False, help="Load titles.csv"
+            "-t", "--titles", action="store_true", default=False,
+            help="Load titles.csv"
         )
         parser.add_argument(
-            "-r", "--review", action="store_true", default=False, help="Load review.csv"
+            "-r", "--review", action="store_true", default=False,
+            help="Load review.csv"
         )
         parser.add_argument(
             "-o",
@@ -72,7 +76,8 @@ class Command(BaseCommand):
         for model, file_name, option in files:
             try:
                 with open(
-                    f"{settings.BASE_DIR}/static/data/{file_name}", encoding="utf-8-sig"
+                    f"{settings.BASE_DIR}/static/data/{file_name}",
+                    encoding="utf-8-sig"
                 ) as csv_file:
                     file_reader = csv.DictReader(csv_file, delimiter=",")
                     for row in file_reader:
